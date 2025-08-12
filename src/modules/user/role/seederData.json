@@ -1,0 +1,20 @@
+[
+  {
+    "name": "admin",
+    "nameEn": "Administrator",
+    "nameFa": "مدیر",
+    "description": "مدیر کل سیستم با دسترسی کامل به تمامی بخش‌ها"
+  },
+  {
+    "name": "staff",
+    "nameEn": "Staff",
+    "nameFa": "کارمند",
+    "description": "کارمند سیستم با دسترسی محدود برای مدیریت و نظارت"
+  },
+  {
+    "name": "user",
+    "nameEn": "User",
+    "nameFa": "کاربر",
+    "description": "کاربر عادی سیستم با دسترسی به امکانات پایه"
+  }
+]

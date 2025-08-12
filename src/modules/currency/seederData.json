@@ -1,0 +1,8 @@
+[
+  { "code": "AED", "name": "درهم", "symbol": "د.إ", "isBase": true, "rateToAED": 1, "rateToUSD": 0.27225, "rateToIRR": 115000 },
+  { "code": "USD", "name": "دلار", "symbol": "$", "isBase": true, "rateToAED": 3.673, "rateToUSD": 1, "rateToIRR": 423000 },
+  { "code": "IRR", "name": "تومان", "symbol": "ت", "isBase": true, "rateToAED": 0.0000087, "rateToUSD": 0.00000236, "rateToIRR": 1 },
+  { "code": "CNY", "name": "یوان", "symbol": "¥", "isBase": false, "rateToAED": 0.519, "rateToUSD": 0.141, "rateToIRR": 60000 }
+]
+
+
