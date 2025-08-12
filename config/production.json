@@ -1,14 +1,14 @@
 {
   "SERVER": {
-    "IP": "api.taganeh.ir",
-    "PORT": "3020"
+    "IP": "exchange-api.taganeh.ir",
+    "PORT": "3050"
   },
   "FRONTEND": {
-    "HOST": "https://taganeh.ir",
-    "PORT": "3021"
+    "HOST": "https://exchange.taganeh.ir",
+    "PORT": "3051"
   },
   "DB": {
-    "NAME": "farmer",
+    "NAME": "exchange",
     "TYPE": "mysql",
     "HOST": "localhost",
     "USER": "taganehroot",

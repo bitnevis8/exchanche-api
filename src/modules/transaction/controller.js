@@ -4,7 +4,6 @@ const Transaction = require("./model");
 const Currency = require("../currency/model");
 const PDFDocument = require('pdfkit');
 const Joi = require("joi");
-const { main: sendEmail } = require("../../utils/emailSender/nodemailerConfig");
 
 async function getRates() {
   const currencies = await Currency.findAll();
@@ -136,99 +135,6 @@ class TransactionController extends BaseController {
     }
   }
 
-  async emailStatementPdf(req, res) {
-    try {
-      const accountId = parseInt(req.params.accountId, 10);
-      const { to, range } = req.body; // range: '10','100','year'
-      if (!to) return this.response(res, 400, false, 'ایمیل مقصد الزامی است');
-
-      const account = await Account.findByPk(accountId, { include: ['customer'] });
-      if (!account) return this.response(res, 404, false, 'حساب یافت نشد');
-
-      // Fetch transactions by range
-      let limit = 100;
-      if (range === '10') limit = 10;
-      if (range === '100') limit = 100;
-      if (range === 'year') limit = 10000; // pull many and filter by year
-
-      const txs = await Transaction.findAll({ where: { accountId }, order: [["id","ASC"]], limit });
-
-      // Create PDF in memory
-      const doc = new PDFDocument({ margin: 36, size: 'A4' });
-      const chunks = [];
-      doc.on('data', (c) => chunks.push(c));
-      const done = new Promise((resolve) => doc.on('end', resolve));
-
-      doc.fontSize(16).text(`صورت‌حساب - ${account.customer?.fullName || account.customerId} - ${account.currencyCode}`, { align: 'right' });
-      doc.moveDown();
-      doc.fontSize(10);
-      const header = ['ردیف', 'توضیحات', 'نوع', 'بدهکار', 'بستانکار', 'مانده', 'تاریخ', 'وضعیت'];
-      doc.text(header.join(' | '), { align: 'right' });
-      doc.moveDown(0.5);
-      txs.forEach((t, idx) => {
-        const debit = Number(t.amount) > 0 ? Number(t.amount) : 0;
-        const credit = Number(t.amount) < 0 ? -Number(t.amount) : 0;
-        const row = [
-          String(idx + 1),
-          t.description || t.type,
-          t.type,
-          debit.toFixed(4),
-          credit.toFixed(4),
-          Number(t.balanceAfter).toFixed(4),
-          new Date(t.valueDate).toISOString().slice(0,10),
-          t.requiresManagerApproval ? 'در انتظار' : 'ثبت شده',
-        ];
-        doc.text(row.join(' | '), { align: 'right' });
-      });
-      doc.end();
-      await done;
-      const pdfBuffer = Buffer.concat(chunks);
-
-      // send email with attachment
-      const html = `<p>صورت‌حساب ${account.customer?.fullName || account.customerId} - ${account.currencyCode}</p>`;
-      await sendEmail(to, 'صورت‌حساب شما', '', html);
-      // Note: for attaching buffer, nodemailerConfig needs minor change to accept attachments; simplified here
-
-      return this.response(res, 200, true, 'PDF صورت‌حساب به ایمیل ارسال شد');
-    } catch (error) {
-      return this.response(res, 500, false, 'خطا در ارسال PDF', null, error);
-    }
-  }
-
-  async yearCloseCustomer(req, res) {
-    try {
-      const customerId = parseInt(req.params.customerId, 10);
-      const accounts = await Account.findAll({ where: { customerId } });
-      if (!accounts.length) return this.response(res, 404, false, 'حسابی یافت نشد');
-
-      const results = [];
-      for (const account of accounts) {
-        const balance = Number(account.balance);
-        if (balance === 0) continue;
-
-        // Close current year: post reversing entry and reset balance
-        const reversingAmount = -balance;
-        const txClose = await Transaction.create({
-          accountId: account.id,
-          currencyCode: account.currencyCode,
-          type: 'year_close',
-          description: 'بستن حساب سال',
-          amount: reversingAmount,
-          balanceAfter: 0,
-          requiresManagerApproval: false,
-          valueDate: new Date(),
-        });
-        await account.update({ balance: 0 });
-
-        // Open new year with opening balance if needed (here zero by default). You can create year_open if required.
-        results.push({ accountId: account.id, closedWith: reversingAmount, txId: txClose.id });
-      }
-
-      return this.response(res, 200, true, 'بستن سال انجام شد', { results });
-    } catch (error) {
-      return this.response(res, 500, false, 'خطا در بستن سال', null, error);
-    }
-  }
   async approve(req, res) {
     try {
       const id = parseInt(req.params.id, 10);

@@ -11,7 +11,7 @@ Transaction.init(
     currencyCode: { type: DataTypes.STRING(8), allowNull: false },
     // type: buy, sell, deposit_cash, withdraw_cash, remittance_in, remittance_out, invoice_sale, invoice_purchase
     type: { 
-      type: DataTypes.ENUM('buy','sell','deposit_cash','withdraw_cash','remittance_in','remittance_out','invoice_sale','invoice_purchase','year_close','year_open'), 
+      type: DataTypes.ENUM('buy','sell','deposit_cash','withdraw_cash','remittance_in','remittance_out','invoice_sale','invoice_purchase'), 
       allowNull: false 
     },
     description: { type: DataTypes.STRING, allowNull: true },

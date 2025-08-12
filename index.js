@@ -21,7 +21,9 @@ const ALLOWED_ORIGINS = {
     "https://api.taganeh.ir",
     "https://api.taganeh.com",
     "https://taganeh.ir",
-    "https://taganeh.com"
+    "https://taganeh.com",
+    "https://exchange.taganeh.ir",
+    "https://exchange.taganeh.com"
   ],
   development: [
     "http://localhost:3003",
