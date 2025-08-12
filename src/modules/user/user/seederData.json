@@ -152,5 +152,18 @@
     "avatar": "https://example.com/avatars/hasan.jpg",
     "BusinessName": "فرآورده‌های کشاورزی پارس",
     "BusinessContactInfo": "09309988776"
+  }, {
+    "firstName": "محمد",
+    "lastName": "محمدیان",
+    "firstNameEn": "Mohammad",
+    "lastNameEn": "Mohammadian",
+    "username": "mm",
+    "email": "imperialway@info.com",
+    "password": "12345678",
+    "isActive": true,
+    "isEmailVerified": true,
+    "avatar": "https://example.com/avatars/hasan.jpg",
+    "BusinessName": "فرآورده‌های کشاورزی پارس",
+    "BusinessContactInfo": "09309988776"
   }
 ]
